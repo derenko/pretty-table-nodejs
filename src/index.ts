@@ -49,7 +49,7 @@ export default class PrettyTable {
   private largestStringLength = 0;
 
   constructor(private headings: Array<string>, private rows: Array<Array<Cell>>){
-    this.elementsToString();
+    this.normalizeRows();
     this.setTrimStringsLength();
     this.setLargestStringLength();
 
@@ -62,9 +62,13 @@ export default class PrettyTable {
     console.log(table);
   }
 
-  private elementsToString(){
-    this.headings = arrayOfElementsToString(this.headings);
-    this.rows = this.rows.map(arrayOfElementsToString);
+  private normalizeRows(){
+    this.rows.map((row) => {
+      if(this.headings.length > row.length){
+        row.push(...createSymbol(this.headings.length - row.length))
+      }
+    })
+    this.rows = this.rows.map(arrayOfElementsToString);    
   }
 
   private setTrimStringsLength(){
@@ -115,26 +119,3 @@ export default class PrettyTable {
     return rows.join('')
   }
 }
-
-const headings = [
-  'name',
-  'age',
-  'grade',
-  'university'
-]
-
-const rows = [
-  [
-    'Jhon', '20', 5, 'Oil and Gasoline'
-  ],
-  [
-    'Bill', '30', null, { name: 'bill' }
-  ],
-  [
-    'Sam', '40', '3', undefined
-  ]
-]
-
-new PrettyTable(headings, rows);
-
-console.log(Number(7).toString())
